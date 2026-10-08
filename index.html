@@ -1,40 +1,62 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Афиша</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:wght@400;700&family=Bebas+Neue&family=Cormorant+Garamond:wght@300;500&family=Unbounded:wght@300;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Афиша</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Картинка по центру, не скроллится -->
-    <div class="center-image">
-        <img src="assets/IMG_5436-removebg-preview.png" alt="">
+<!-- ШАПКА-АФИША -->
+<header class="poster" id="poster">
+
+    <!-- Слой задний: большая дата на фоне -->
+    <div class="poster-layer poster-layer--back">
+        <span class="bg-date" id="bgDate">25.10</span>
     </div>
 
-    <!-- Кнопка переключения стиля текста (справа сверху) -->
-    <button id="style-toggle" class="style-toggle" aria-label="Сменить стиль текста">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-    </button>
+    <!-- Слой средний: картинка -->
+    <div class="poster-layer poster-layer--mid">
+        <img src="assets/IMG_5436-removebg-preview.png" alt="" class="poster-img">
+    </div>
 
-    <!-- Контент поверх фона -->
-    <div class="poster">
-        <div class="poster-inner">
-            <div class="poster-meta">Дата · Место</div>
-            <h1 class="poster-title">25 октября</h1>
-            <div class="poster-sub">м. Волгоградский проспект</div>
-            <div class="poster-divider"></div>
-            <div class="poster-info">3 часа + съёмка селектов</div>
-            <div class="poster-time">17:00 — 20:00</div>
+    <!-- Слой передний: текст -->
+    <div class="poster-layer poster-layer--front">
+        <div class="poster-content">
+            <div class="meta-row">
+                <span class="meta-item">м. Волгоградский проспект</span>
+                <span class="meta-dot"></span>
+                <span class="meta-item">17:00 — 20:00</span>
+            </div>
+            <h1 class="title" data-text="25 октября">25 октября</h1>
+            <div class="subtitle">3 часа + съёмка селектов</div>
+            <div class="tagline">SELECT SHOOTING · VOLGOGRADSKY</div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Кнопка смены стиля — в углу -->
+    <button class="style-btn" id="styleBtn" aria-label="Сменить стиль">
+        <span>STYLE</span>
+        <span class="style-num" id="styleNum">01</span>
+    </button>
+
+    <!-- Сканлайны / глитч-оверлей -->
+    <div class="scanlines"></div>
+    <div class="glitch-overlay" id="glitchOverlay"></div>
+
+</header>
+
+<!-- Ниже — место под остальной сайт (скролл) -->
+<main>
+    <section class="section"><h2>Секция 1</h2></section>
+    <section class="section"><h2>Секция 2</h2></section>
+    <section class="section"><h2>Секция 3</h2></section>
+</main>
+
+<script src="script.js"></script>
 </body>
 </html>
