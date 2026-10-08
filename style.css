@@ -23,10 +23,11 @@ html, body {
 }
 
 .center-image img {
-    width: 300px;      /* подгони под свою картинку */
+    width: 350px;
+    max-width: 80vw;
     height: auto;
     display: block;
-    filter: drop-shadow(0 0 30px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.6));
 }
 
 /* Секции */
