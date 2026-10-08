@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<!-- ЛОГОТИП (перетаскиваемый, отдельный слой) -->
+<!-- ЛОГОТИП — двигается, тыком меняет стиль -->
 <img id="draggableLogo"
      src="https://raw.githubusercontent.com/leonillaprosmm-bot/position-content/main/assets/IMG_1370-removebg-preview.png"
      alt="Logo"
@@ -27,7 +27,7 @@
     </div>
 
     <div class="poster-layer poster-layer--mid">
-        <img src="assets/IMG_5436-removebg-preview.png" alt="" class="poster-img">
+        <img src="assets/IMG_5436-removebg-preview.png" alt="" class="poster-img" crossorigin="anonymous">
     </div>
 
     <div class="poster-layer poster-layer--front">
@@ -43,17 +43,11 @@
         </div>
     </div>
 
-    <!-- Кнопки управления -->
-    <div class="controls">
-        <button class="ctrl-btn" id="styleBtn" aria-label="Сменить стиль">
-            <span class="ctrl-label">STYLE</span>
-            <span class="ctrl-num" id="styleNum">01</span>
-        </button>
-        <button class="ctrl-btn" id="downloadBtn" aria-label="Скачать">
-            <span class="ctrl-label">3:4</span>
-            <span class="ctrl-num">↓</span>
-        </button>
-    </div>
+    <!-- Одна кнопка — скачать -->
+    <button class="ctrl-btn" id="downloadBtn" aria-label="Скачать 3:4">
+        <span class="ctrl-label">3:4</span>
+        <span class="ctrl-num">↓</span>
+    </button>
 
     <div class="scanlines"></div>
     <div class="glitch-overlay" id="glitchOverlay"></div>
