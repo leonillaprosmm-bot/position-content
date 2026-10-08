@@ -2,29 +2,34 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Афиша</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- ЛОГОТИП (перетаскиваемый, отдельный слой) -->
+<img id="draggableLogo"
+     src="https://raw.githubusercontent.com/leonillaprosmm-bot/position-content/main/assets/IMG_1370-removebg-preview.png"
+     alt="Logo"
+     class="draggable-logo"
+     crossorigin="anonymous">
+
 <!-- ШАПКА-АФИША -->
 <header class="poster" id="poster">
 
-    <!-- Слой задний: большая дата на фоне -->
     <div class="poster-layer poster-layer--back">
-        <span class="bg-date" id="bgDate">25.10</span>
+        <span class="bg-date">25.10</span>
     </div>
 
-    <!-- Слой средний: картинка -->
     <div class="poster-layer poster-layer--mid">
         <img src="assets/IMG_5436-removebg-preview.png" alt="" class="poster-img">
     </div>
 
-    <!-- Слой передний: текст -->
     <div class="poster-layer poster-layer--front">
         <div class="poster-content">
             <div class="meta-row">
@@ -32,29 +37,31 @@
                 <span class="meta-dot"></span>
                 <span class="meta-item">17:00 — 20:00</span>
             </div>
-            <h1 class="title" data-text="25 октября">25 октября</h1>
+            <h1 class="title">25 октября</h1>
             <div class="subtitle">3 часа + съёмка селектов</div>
             <div class="tagline">SELECT SHOOTING · VOLGOGRADSKY</div>
         </div>
     </div>
 
-    <!-- Кнопка смены стиля — в углу -->
-    <button class="style-btn" id="styleBtn" aria-label="Сменить стиль">
-        <span>STYLE</span>
-        <span class="style-num" id="styleNum">01</span>
-    </button>
+    <!-- Кнопки управления -->
+    <div class="controls">
+        <button class="ctrl-btn" id="styleBtn" aria-label="Сменить стиль">
+            <span class="ctrl-label">STYLE</span>
+            <span class="ctrl-num" id="styleNum">01</span>
+        </button>
+        <button class="ctrl-btn" id="downloadBtn" aria-label="Скачать">
+            <span class="ctrl-label">3:4</span>
+            <span class="ctrl-num">↓</span>
+        </button>
+    </div>
 
-    <!-- Сканлайны / глитч-оверлей -->
     <div class="scanlines"></div>
     <div class="glitch-overlay" id="glitchOverlay"></div>
-
 </header>
 
-<!-- Ниже — место под остальной сайт (скролл) -->
 <main>
     <section class="section"><h2>Секция 1</h2></section>
     <section class="section"><h2>Секция 2</h2></section>
-    <section class="section"><h2>Секция 3</h2></section>
 </main>
 
 <script src="script.js"></script>
