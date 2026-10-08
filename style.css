@@ -1,248 +1,359 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: 'Outfit', sans-serif;
+html { scroll-behavior: smooth; }
+
+body {
+    background: #050508;
     color: #fff;
-    background: radial-gradient(circle at 50% 40%, #1a0a2e 0%, #050508 70%);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
 }
 
-/* Картинка по центру */
-.center-image {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-    pointer-events: none;
-}
-
-.center-image img {
-    width: 340px;
-    max-width: 70vw;
-    height: auto;
-    display: block;
-    filter: drop-shadow(0 0 80px rgba(150, 100, 255, 0.5));
-    opacity: 0.85;
-}
-
-/* Контент поверх картинки */
+/* =========================================
+   АФИША-ШАПКА
+   ========================================= */
 .poster {
-    position: fixed;
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, #1a0a2e 0%, #050508 75%);
+    transition: background 0.8s ease;
+}
+
+/* Слои */
+.poster-layer {
+    position: absolute;
     inset: 0;
-    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
     pointer-events: none;
 }
 
-.poster-inner {
+.poster-layer--back { z-index: 1; }
+.poster-layer--mid  { z-index: 2; }
+.poster-layer--front{ z-index: 3; }
+
+/* Задняя огромная дата */
+.bg-date {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 800;
+    font-size: clamp(10rem, 40vw, 34rem);
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.08);
+    text-stroke: 1px rgba(255, 255, 255, 0.08);
+    user-select: none;
+    transition: all 0.8s ease;
+}
+
+/* Картинка */
+.poster-img {
+    width: clamp(180px, 26vw, 340px);
+    height: auto;
+    filter: drop-shadow(0 0 80px rgba(150, 100, 255, 0.5));
+    opacity: 0.9;
+    animation: floatImg 6s ease-in-out infinite;
+}
+
+@keyframes floatImg {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+/* Передний текст */
+.poster-content {
     text-align: center;
     max-width: 90vw;
-    pointer-events: auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 4;
 }
 
-.poster-meta {
-    font-size: 12px;
+.meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-size: clamp(0.7rem, 1.4vw, 0.85rem);
     text-transform: uppercase;
-    letter-spacing: 4px;
-    opacity: 0.5;
-    margin-bottom: 20px;
+    letter-spacing: 3px;
+    opacity: 0.6;
+    margin-bottom: 24px;
     font-weight: 300;
+    flex-wrap: wrap;
 }
 
-.poster-title {
-    font-size: clamp(3rem, 9vw, 7rem);
+.meta-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+}
+
+.title {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    font-size: clamp(2.6rem, 9vw, 7rem);
     line-height: 0.95;
-    font-weight: 400;
-    margin-bottom: 12px;
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+    position: relative;
     transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.poster-sub {
-    font-size: clamp(1rem, 2vw, 1.4rem);
-    letter-spacing: 2px;
+.subtitle {
+    font-size: clamp(0.95rem, 2vw, 1.3rem);
+    font-weight: 300;
     opacity: 0.8;
-    margin-bottom: 28px;
-    font-weight: 300;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    transition: all 0.6s ease;
 }
 
-.poster-divider {
-    width: 60px;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.4);
-    margin: 0 auto 28px;
-}
-
-.poster-info {
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-    opacity: 0.75;
-    margin-bottom: 8px;
-    font-weight: 300;
-    letter-spacing: 0.5px;
-}
-
-.poster-time {
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
-    letter-spacing: 3px;
+.tagline {
+    font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    opacity: 0.4;
     font-weight: 400;
-    opacity: 0.95;
+    transition: all 0.6s ease;
 }
 
-/* Кнопка переключения стиля */
-.style-toggle {
-    position: fixed;
+/* Кнопка стиля — в углу */
+.style-btn {
+    position: absolute;
     top: 24px;
     right: 24px;
-    z-index: 100;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    cursor: pointer;
+    z-index: 20;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 2px;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    cursor: pointer;
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-.style-toggle:hover {
-    transform: scale(1.1) rotate(90deg);
+.style-btn:hover {
+    transform: scale(1.08) rotate(-6deg);
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.4);
 }
 
-.style-toggle:active {
-    transform: scale(0.95) rotate(90deg);
-}
+.style-btn:active { transform: scale(0.95); }
 
-.style-toggle .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #fff;
-    opacity: 0.9;
-    transition: all 0.3s ease;
-}
-
-.style-toggle:hover .dot {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
-}
-
-/* =========================================
-   СТИЛИ ТЕКСТА — переключаются через JS
-   ========================================= */
-
-/* STYLE 0: Минимал (по умолчанию) */
-body[data-style="0"] .poster-title {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 200;
-    letter-spacing: -0.02em;
-    color: #fff;
-}
-
-/* STYLE 1: Элегант (Playfair) */
-body[data-style="1"] .poster-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: 0;
-    color: #f5e6c8;
-    text-shadow: 0 0 40px rgba(245, 230, 200, 0.3);
-}
-
-body[data-style="1"] .poster-sub {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    letter-spacing: 1px;
-    color: #f5e6c8;
-}
-
-/* STYLE 2: Плакат (Bebas) */
-body[data-style="2"] .poster-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-weight: 400;
-    letter-spacing: 4px;
-    color: #fff;
-    text-transform: uppercase;
-}
-
-body[data-style="2"] .poster-meta,
-body[data-style="2"] .poster-sub,
-body[data-style="2"] .poster-info,
-body[data-style="2"] .poster-time {
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-}
-
-/* STYLE 3: Футуризм (Unbounded) с переливанием */
-body[data-style="3"] .poster-title {
+.style-num {
     font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    letter-spacing: -0.04em;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+/* Сканлайны */
+.scanlines {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 2px,
+        rgba(255, 255, 255, 0.015) 3px,
+        transparent 4px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.5;
+}
+
+/* Глитч-оверлей (мигает при смене) */
+.glitch-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    opacity: 0;
     background: linear-gradient(
         90deg,
-        #ff6ec7 0%,
-        #a78bfa 25%,
-        #38bdf8 50%,
-        #a78bfa 75%,
-        #ff6ec7 100%
+        rgba(255, 0, 128, 0.15),
+        rgba(0, 255, 255, 0.15)
+    );
+    mix-blend-mode: screen;
+    transition: opacity 0.15s ease;
+}
+
+.glitch-overlay.active { opacity: 1; }
+
+/* =========================================
+   СТИЛИ ТЕКСТА — переключаются data-style
+   ========================================= */
+
+/* STYLE 0 — Neon Glitch (по умолчанию) */
+body[data-style="0"] .title {
+    color: #fff;
+    text-shadow:
+        2px 0 0 rgba(255, 0, 128, 0.7),
+        -2px 0 0 rgba(0, 255, 255, 0.7);
+    animation: glitchTitle 3s infinite;
+}
+body[data-style="0"] .bg-date {
+    -webkit-text-stroke: 1px rgba(255, 0, 128, 0.15);
+}
+
+@keyframes glitchTitle {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(-3px, 1px); }
+    94% { transform: translate(3px, -1px); }
+    96% { transform: translate(-2px, -1px); }
+    98% { transform: translate(2px, 1px); }
+}
+
+/* STYLE 1 — Shimmer Gold */
+body[data-style="1"] .title {
+    background: linear-gradient(
+        90deg,
+        #ffd700 0%,
+        #fff8dc 25%,
+        #ffd700 50%,
+        #fff8dc 75%,
+        #ffd700 100%
     );
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shimmer 3s linear infinite;
-    filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.4));
+    filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.4));
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+}
+body[data-style="1"] .subtitle {
+    color: #ffd700;
+    font-family: 'Syne', sans-serif;
+}
+body[data-style="1"] .bg-date {
+    -webkit-text-stroke: 1px rgba(255, 215, 0, 0.18);
 }
 
-body[data-style="3"] .poster-sub,
-body[data-style="3"] .poster-time {
-    background: linear-gradient(90deg, #38bdf8, #a78bfa, #ff6ec7);
+/* STYLE 2 — Cyber Ice */
+body[data-style="2"] .title {
+    background: linear-gradient(90deg, #38bdf8, #a78bfa, #38bdf8);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shimmer 4s linear infinite;
+    filter: drop-shadow(0 0 50px rgba(56, 189, 248, 0.5));
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: -0.06em;
+}
+body[data-style="2"] .subtitle,
+body[data-style="2"] .tagline {
+    color: #a5f3fc;
+}
+body[data-style="2"] .bg-date {
+    -webkit-text-stroke: 1px rgba(56, 189, 248, 0.2);
+}
+body[data-style="2"] .poster {
+    background: radial-gradient(circle at 50% 50%, #0a1a2e 0%, #050508 75%);
+}
+
+/* STYLE 3 — Blood Pulse */
+body[data-style="3"] .title {
+    color: #fff;
+    text-shadow:
+        0 0 20px rgba(255, 0, 60, 0.8),
+        0 0 40px rgba(255, 0, 60, 0.5);
+    animation: pulseBlood 1.5s ease-in-out infinite;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+}
+body[data-style="3"] .subtitle { color: #ff4d6d; }
+body[data-style="3"] .bg-date {
+    -webkit-text-stroke: 1px rgba(255, 0, 60, 0.22);
+}
+body[data-style="3"] .poster {
+    background: radial-gradient(circle at 50% 50%, #2e0a0a 0%, #050508 75%);
+}
+
+@keyframes pulseBlood {
+    0%, 100% { text-shadow: 0 0 20px rgba(255,0,60,0.8), 0 0 40px rgba(255,0,60,0.4); }
+    50%      { text-shadow: 0 0 40px rgba(255,0,60,1), 0 0 80px rgba(255,0,60,0.7); }
 }
 
 @keyframes shimmer {
-    0% { background-position: 0% center; }
+    0%   { background-position: 0% center; }
     100% { background-position: 200% center; }
 }
 
-/* Плавные переходы всех текстов */
-.poster-title,
-.poster-sub,
-.poster-meta,
-.poster-info,
-.poster-time {
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+/* =========================================
+   ОСНОВНОЙ САЙТ (скролл)
+   ========================================= */
+.section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    font-size: 2rem;
+    opacity: 0.3;
 }
 
-/* Мобильная адаптация */
+/* =========================================
+   МОБИЛЬНАЯ АДАПТАЦИЯ
+   ========================================= */
 @media (max-width: 640px) {
-    .center-image img {
-        width: 240px;
-        opacity: 0.7;
-    }
-    .style-toggle {
-        width: 48px;
-        height: 48px;
+    .poster { min-height: 100svh; }
+
+    .style-btn {
+        width: 60px;
+        height: 60px;
         top: 16px;
         right: 16px;
     }
+    .style-num { font-size: 14px; }
+
+    .poster-img { width: 200px; }
+
+    .meta-row {
+        gap: 8px;
+        letter-spacing: 2px;
+        margin-bottom: 18px;
+    }
+
+    .bg-date {
+        font-size: 60vw;
+    }
+
+    .tagline {
+        letter-spacing: 3px;
+    }
+}
+
+/* Неподвижный скролл для iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    .poster { min-height: -webkit-fill-available; }
 }
