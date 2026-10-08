@@ -1,20 +1,27 @@
 const body = document.body;
-const styleToggle = document.getElementById('style-toggle');
-const TOTAL_STYLES = 4;
+const styleBtn = document.getElementById('styleBtn');
+const styleNum = document.getElementById('styleNum');
+const glitch = document.getElementById('glitchOverlay');
 
-let currentStyle = 0;
+const TOTAL = 4;
+let current = 0;
 
-// Ставим начальный стиль
-body.setAttribute('data-style', currentStyle);
+body.setAttribute('data-style', current);
+styleNum.textContent = String(current + 1).padStart(2, '0');
 
-styleToggle.addEventListener('click', () => {
-    currentStyle = (currentStyle + 1) % TOTAL_STYLES;
-    body.setAttribute('data-style', currentStyle);
+styleBtn.addEventListener('click', () => {
+    current = (current + 1) % TOTAL;
+    body.setAttribute('data-style', current);
+    styleNum.textContent = String(current + 1).padStart(2, '0');
 
-    // Микро-анимация нажатия на контент
-    const title = document.querySelector('.poster-title');
-    title.style.transform = 'scale(1.05)';
+    // Глитч-вспышка при смене
+    glitch.classList.add('active');
+    setTimeout(() => glitch.classList.remove('active'), 180);
+
+    // Микро-подпрыгивание заголовка
+    const title = document.querySelector('.title');
+    title.style.transform = 'translateY(-6px) scale(1.03)';
     setTimeout(() => {
-        title.style.transform = 'scale(1)';
-    }, 200);
+        title.style.transform = 'translateY(0) scale(1)';
+    }, 250);
 });
