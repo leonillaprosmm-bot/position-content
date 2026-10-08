@@ -1,4 +1,3 @@
-// Меняем фон body при скролле в зависимости от секции
 const sections = document.querySelectorAll('.section');
 const body = document.body;
 
@@ -10,8 +9,7 @@ function updateBackground() {
         const bottom = top + section.offsetHeight;
 
         if (scrollY >= top && scrollY < bottom) {
-            const bg = section.dataset.bg;
-            body.style.backgroundColor = bg;
+            body.style.backgroundColor = section.dataset.bg;
         }
     });
 }
