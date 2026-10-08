@@ -1,5 +1,4 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -10,21 +9,47 @@ body {
 }
 
 /* =========================================
-   АФИША-ШАПКА
+   ЛОГОТИП — перетаскиваемый
+   ========================================= */
+.draggable-logo {
+    position: fixed;
+    top: 100px;
+    left: 100px;
+    width: 120px;
+    height: auto;
+    z-index: 9999;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+    filter: drop-shadow(0 0 20px rgba(255, 100, 200, 0.5));
+    transition: filter 0.3s ease;
+}
+
+.draggable-logo:hover {
+    filter: drop-shadow(0 0 30px rgba(255, 100, 200, 0.9));
+}
+
+.draggable-logo:active {
+    cursor: grabbing;
+}
+
+/* =========================================
+   АФИША
    ========================================= */
 .poster {
     position: relative;
     width: 100%;
     min-height: 100vh;
+    min-height: 100svh;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 50% 50%, #1a0a2e 0%, #050508 75%);
+    background: radial-gradient(circle at 50% 50%, #2e0a0a 0%, #050508 75%);
     transition: background 0.8s ease;
 }
 
-/* Слои */
 .poster-layer {
     position: absolute;
     inset: 0;
@@ -38,7 +63,6 @@ body {
 .poster-layer--mid  { z-index: 2; }
 .poster-layer--front{ z-index: 3; }
 
-/* Задняя огромная дата */
 .bg-date {
     font-family: 'Unbounded', sans-serif;
     font-weight: 800;
@@ -47,17 +71,15 @@ body {
     letter-spacing: -0.06em;
     color: transparent;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.08);
-    text-stroke: 1px rgba(255, 255, 255, 0.08);
     user-select: none;
     transition: all 0.8s ease;
 }
 
-/* Картинка */
 .poster-img {
-    width: clamp(180px, 26vw, 340px);
+    width: clamp(220px, 30vw, 380px);
     height: auto;
-    filter: drop-shadow(0 0 80px rgba(150, 100, 255, 0.5));
-    opacity: 0.9;
+    filter: drop-shadow(0 0 80px rgba(255, 100, 200, 0.55));
+    opacity: 0.95;
     animation: floatImg 6s ease-in-out infinite;
 }
 
@@ -66,7 +88,6 @@ body {
     50%      { transform: translateY(-12px); }
 }
 
-/* Передний текст */
 .poster-content {
     text-align: center;
     max-width: 90vw;
@@ -98,22 +119,27 @@ body {
 }
 
 .title {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    font-size: clamp(2.6rem, 9vw, 7rem);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.6rem, 10vw, 7rem);
     line-height: 0.95;
     letter-spacing: -0.04em;
     margin-bottom: 16px;
-    position: relative;
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #fff;
+    text-shadow:
+        0 0 20px rgba(255, 0, 60, 0.8),
+        0 0 40px rgba(255, 0, 60, 0.5);
+    animation: pulseBlood 1.5s ease-in-out infinite;
+    transition: all 0.6s ease;
 }
 
 .subtitle {
     font-size: clamp(0.95rem, 2vw, 1.3rem);
     font-weight: 300;
-    opacity: 0.8;
+    opacity: 0.85;
     letter-spacing: 1px;
     margin-bottom: 20px;
+    color: #ff4d6d;
     transition: all 0.6s ease;
 }
 
@@ -126,12 +152,23 @@ body {
     transition: all 0.6s ease;
 }
 
-/* Кнопка стиля — в углу */
-.style-btn {
+@keyframes pulseBlood {
+    0%, 100% { text-shadow: 0 0 20px rgba(255,0,60,0.8), 0 0 40px rgba(255,0,60,0.4); }
+    50%      { text-shadow: 0 0 40px rgba(255,0,60,1), 0 0 80px rgba(255,0,60,0.7); }
+}
+
+/* Кнопки управления */
+.controls {
     position: absolute;
     top: 24px;
     right: 24px;
     z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ctrl-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -154,19 +191,25 @@ body {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-.style-btn:hover {
-    transform: scale(1.08) rotate(-6deg);
+.ctrl-btn:hover {
+    transform: scale(1.08);
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.4);
 }
 
-.style-btn:active { transform: scale(0.95); }
+.ctrl-btn:active { transform: scale(0.95); }
 
-.style-num {
+.ctrl-num {
     font-family: 'Unbounded', sans-serif;
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 0;
+}
+
+.ctrl-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    opacity: 0.7;
 }
 
 /* Сканлайны */
@@ -186,7 +229,6 @@ body {
     opacity: 0.5;
 }
 
-/* Глитч-оверлей (мигает при смене) */
 .glitch-overlay {
     position: absolute;
     inset: 0;
@@ -201,23 +243,15 @@ body {
     mix-blend-mode: screen;
     transition: opacity 0.15s ease;
 }
-
 .glitch-overlay.active { opacity: 1; }
 
-/* =========================================
-   СТИЛИ ТЕКСТА — переключаются data-style
-   ========================================= */
-
-/* STYLE 0 — Neon Glitch (по умолчанию) */
+/* Стили */
 body[data-style="0"] .title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
     color: #fff;
-    text-shadow:
-        2px 0 0 rgba(255, 0, 128, 0.7),
-        -2px 0 0 rgba(0, 255, 255, 0.7);
+    text-shadow: 2px 0 0 rgba(255, 0, 128, 0.7), -2px 0 0 rgba(0, 255, 255, 0.7);
     animation: glitchTitle 3s infinite;
-}
-body[data-style="0"] .bg-date {
-    -webkit-text-stroke: 1px rgba(255, 0, 128, 0.15);
 }
 
 @keyframes glitchTitle {
@@ -228,16 +262,8 @@ body[data-style="0"] .bg-date {
     98% { transform: translate(2px, 1px); }
 }
 
-/* STYLE 1 — Shimmer Gold */
 body[data-style="1"] .title {
-    background: linear-gradient(
-        90deg,
-        #ffd700 0%,
-        #fff8dc 25%,
-        #ffd700 50%,
-        #fff8dc 75%,
-        #ffd700 100%
-    );
+    background: linear-gradient(90deg, #ffd700 0%, #fff8dc 25%, #ffd700 50%, #fff8dc 75%, #ffd700 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -246,16 +272,10 @@ body[data-style="1"] .title {
     filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.4));
     font-family: 'Syne', sans-serif;
     font-weight: 800;
+    text-shadow: none;
 }
-body[data-style="1"] .subtitle {
-    color: #ffd700;
-    font-family: 'Syne', sans-serif;
-}
-body[data-style="1"] .bg-date {
-    -webkit-text-stroke: 1px rgba(255, 215, 0, 0.18);
-}
+body[data-style="1"] .subtitle { color: #ffd700; }
 
-/* STYLE 2 — Cyber Ice */
 body[data-style="2"] .title {
     background: linear-gradient(90deg, #38bdf8, #a78bfa, #38bdf8);
     background-size: 200% auto;
@@ -267,50 +287,27 @@ body[data-style="2"] .title {
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: -0.06em;
+    text-shadow: none;
 }
-body[data-style="2"] .subtitle,
-body[data-style="2"] .tagline {
-    color: #a5f3fc;
-}
-body[data-style="2"] .bg-date {
-    -webkit-text-stroke: 1px rgba(56, 189, 248, 0.2);
-}
-body[data-style="2"] .poster {
-    background: radial-gradient(circle at 50% 50%, #0a1a2e 0%, #050508 75%);
-}
+body[data-style="2"] .subtitle, body[data-style="2"] .tagline { color: #a5f3fc; }
+body[data-style="2"] .poster { background: radial-gradient(circle at 50% 50%, #0a1a2e 0%, #050508 75%); }
 
-/* STYLE 3 — Blood Pulse */
 body[data-style="3"] .title {
     color: #fff;
-    text-shadow:
-        0 0 20px rgba(255, 0, 60, 0.8),
-        0 0 40px rgba(255, 0, 60, 0.5);
+    text-shadow: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.5);
     animation: pulseBlood 1.5s ease-in-out infinite;
     font-family: 'Syne', sans-serif;
     font-weight: 800;
-    letter-spacing: -0.05em;
 }
 body[data-style="3"] .subtitle { color: #ff4d6d; }
-body[data-style="3"] .bg-date {
-    -webkit-text-stroke: 1px rgba(255, 0, 60, 0.22);
-}
-body[data-style="3"] .poster {
-    background: radial-gradient(circle at 50% 50%, #2e0a0a 0%, #050508 75%);
-}
-
-@keyframes pulseBlood {
-    0%, 100% { text-shadow: 0 0 20px rgba(255,0,60,0.8), 0 0 40px rgba(255,0,60,0.4); }
-    50%      { text-shadow: 0 0 40px rgba(255,0,60,1), 0 0 80px rgba(255,0,60,0.7); }
-}
+body[data-style="3"] .poster { background: radial-gradient(circle at 50% 50%, #2e0a0a 0%, #050508 75%); }
 
 @keyframes shimmer {
     0%   { background-position: 0% center; }
     100% { background-position: 200% center; }
 }
 
-/* =========================================
-   ОСНОВНОЙ САЙТ (скролл)
-   ========================================= */
+/* Секции */
 .section {
     height: 100vh;
     display: flex;
@@ -328,15 +325,27 @@ body[data-style="3"] .poster {
 @media (max-width: 640px) {
     .poster { min-height: 100svh; }
 
-    .style-btn {
-        width: 60px;
-        height: 60px;
+    .controls {
         top: 16px;
         right: 16px;
+        gap: 10px;
     }
-    .style-num { font-size: 14px; }
 
-    .poster-img { width: 200px; }
+    .ctrl-btn {
+        width: 60px;
+        height: 60px;
+    }
+    .ctrl-num { font-size: 14px; }
+
+    /* Картинка больше на телефоне — по пояс */
+    .poster-img {
+        width: 90vw;
+        max-width: 420px;
+    }
+
+    .draggable-logo {
+        width: 90px;
+    }
 
     .meta-row {
         gap: 8px;
@@ -344,16 +353,10 @@ body[data-style="3"] .poster {
         margin-bottom: 18px;
     }
 
-    .bg-date {
-        font-size: 60vw;
-    }
-
-    .tagline {
-        letter-spacing: 3px;
-    }
+    .bg-date { font-size: 70vw; }
+    .tagline { letter-spacing: 3px; }
 }
 
-/* Неподвижный скролл для iOS Safari */
 @supports (-webkit-touch-callout: none) {
     .poster { min-height: -webkit-fill-available; }
 }
