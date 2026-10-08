@@ -1,0 +1,58 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background: #1a1a2e;
+    transition: background-color 0.8s ease;
+    scroll-behavior: smooth;
+}
+
+/* Картинка по центру экрана — фиксированная */
+.center-image {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.center-image img {
+    width: 300px;      /* подгони под свою картинку */
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 0 30px rgba(0,0,0,0.5));
+}
+
+/* Секции */
+.section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.content {
+    max-width: 600px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.content p {
+    font-size: 1.1rem;
+    opacity: 0.85;
+}
