@@ -1,21 +1,20 @@
-const sections = document.querySelectorAll('.section');
 const body = document.body;
+const styleToggle = document.getElementById('style-toggle');
+const TOTAL_STYLES = 4;
 
-function updateBackground() {
-    const center = window.scrollY + window.innerHeight / 2;
+let currentStyle = 0;
 
-    sections.forEach(section => {
-        const top = section.offsetTop;
-        const bottom = top + section.offsetHeight;
+// Ставим начальный стиль
+body.setAttribute('data-style', currentStyle);
 
-        if (center >= top && center < bottom) {
-            const bg = section.dataset.bg;
-            if (body.style.backgroundColor !== bg) {
-                body.style.backgroundColor = bg;
-            }
-        }
-    });
-}
+styleToggle.addEventListener('click', () => {
+    currentStyle = (currentStyle + 1) % TOTAL_STYLES;
+    body.setAttribute('data-style', currentStyle);
 
-window.addEventListener('scroll', updateBackground, { passive: true });
-window.addEventListener('load', updateBackground);
+    // Микро-анимация нажатия на контент
+    const title = document.querySelector('.poster-title');
+    title.style.transform = 'scale(1.05)';
+    setTimeout(() => {
+        title.style.transform = 'scale(1)';
+    }, 200);
+});
