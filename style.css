@@ -9,29 +9,31 @@ body {
 }
 
 /* =========================================
-   ЛОГОТИП — перетаскиваемый
+   ЛОГОТИП — перетаскиваемый + клик = стиль
    ========================================= */
 .draggable-logo {
     position: fixed;
     top: 100px;
     left: 100px;
-    width: 120px;
+    width: 130px;
     height: auto;
     z-index: 9999;
-    cursor: grab;
+    cursor: pointer;
     user-select: none;
     -webkit-user-drag: none;
     touch-action: none;
     filter: drop-shadow(0 0 20px rgba(255, 100, 200, 0.5));
-    transition: filter 0.3s ease;
+    transition: filter 0.3s ease, transform 0.2s ease;
+    transform-origin: top left;
 }
 
 .draggable-logo:hover {
     filter: drop-shadow(0 0 30px rgba(255, 100, 200, 0.9));
 }
 
-.draggable-logo:active {
+.draggable-logo.dragging {
     cursor: grabbing;
+    filter: drop-shadow(0 0 40px rgba(255, 200, 100, 1));
 }
 
 /* =========================================
@@ -126,9 +128,7 @@ body {
     letter-spacing: -0.04em;
     margin-bottom: 16px;
     color: #fff;
-    text-shadow:
-        0 0 20px rgba(255, 0, 60, 0.8),
-        0 0 40px rgba(255, 0, 60, 0.5);
+    text-shadow: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.5);
     animation: pulseBlood 1.5s ease-in-out infinite;
     transition: all 0.6s ease;
 }
@@ -157,18 +157,12 @@ body {
     50%      { text-shadow: 0 0 40px rgba(255,0,60,1), 0 0 80px rgba(255,0,60,0.7); }
 }
 
-/* Кнопки управления */
-.controls {
+/* Кнопка скачать */
+.ctrl-btn {
     position: absolute;
     top: 24px;
     right: 24px;
     z-index: 20;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.ctrl-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -201,7 +195,7 @@ body {
 
 .ctrl-num {
     font-family: 'Unbounded', sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     letter-spacing: 0;
 }
@@ -235,17 +229,13 @@ body {
     z-index: 6;
     pointer-events: none;
     opacity: 0;
-    background: linear-gradient(
-        90deg,
-        rgba(255, 0, 128, 0.15),
-        rgba(0, 255, 255, 0.15)
-    );
+    background: linear-gradient(90deg, rgba(255, 0, 128, 0.15), rgba(0, 255, 255, 0.15));
     mix-blend-mode: screen;
     transition: opacity 0.15s ease;
 }
 .glitch-overlay.active { opacity: 1; }
 
-/* Стили */
+/* Стили текста */
 body[data-style="0"] .title {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
@@ -307,7 +297,6 @@ body[data-style="3"] .poster { background: radial-gradient(circle at 50% 50%, #2
     100% { background-position: 200% center; }
 }
 
-/* Секции */
 .section {
     height: 100vh;
     display: flex;
@@ -319,40 +308,13 @@ body[data-style="3"] .poster { background: radial-gradient(circle at 50% 50%, #2
     opacity: 0.3;
 }
 
-/* =========================================
-   МОБИЛЬНАЯ АДАПТАЦИЯ
-   ========================================= */
 @media (max-width: 640px) {
     .poster { min-height: 100svh; }
-
-    .controls {
-        top: 16px;
-        right: 16px;
-        gap: 10px;
-    }
-
-    .ctrl-btn {
-        width: 60px;
-        height: 60px;
-    }
-    .ctrl-num { font-size: 14px; }
-
-    /* Картинка больше на телефоне — по пояс */
-    .poster-img {
-        width: 90vw;
-        max-width: 420px;
-    }
-
-    .draggable-logo {
-        width: 90px;
-    }
-
-    .meta-row {
-        gap: 8px;
-        letter-spacing: 2px;
-        margin-bottom: 18px;
-    }
-
+    .ctrl-btn { width: 60px; height: 60px; top: 16px; right: 16px; }
+    .ctrl-num { font-size: 16px; }
+    .poster-img { width: 90vw; max-width: 420px; }
+    .draggable-logo { width: 100px; }
+    .meta-row { gap: 8px; letter-spacing: 2px; margin-bottom: 18px; }
     .bg-date { font-size: 70vw; }
     .tagline { letter-spacing: 3px; }
 }
