@@ -4,15 +4,18 @@
     box-sizing: border-box;
 }
 
-html, body {
-    font-family: Arial, sans-serif;
-    color: #fff;
-    background: #1a1a2e;
-    transition: background-color 0.8s ease;
+html {
     scroll-behavior: smooth;
 }
 
-/* Картинка по центру экрана — фиксированная */
+body {
+    font-family: 'Outfit', Arial, sans-serif;
+    color: #fff;
+    background: #0a0a1a;
+    transition: background-color 1s ease;
+}
+
+/* Картинка по центру — фиксированная, не скроллится */
 .center-image {
     position: fixed;
     top: 50%;
@@ -23,11 +26,11 @@ html, body {
 }
 
 .center-image img {
-    width: 350px;
+    width: 380px;
     max-width: 80vw;
     height: auto;
     display: block;
-    filter: drop-shadow(0 0 40px rgba(0,0,0,0.6));
+    filter: drop-shadow(0 0 60px rgba(120, 100, 255, 0.6));
 }
 
 /* Секции */
@@ -40,20 +43,31 @@ html, body {
 }
 
 .content {
-    max-width: 600px;
     text-align: center;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 30px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
+    max-width: 600px;
 }
 
 .content h2 {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
+    font-size: 3rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 30%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .content p {
     font-size: 1.1rem;
-    opacity: 0.85;
+    opacity: 0.6;
+    font-weight: 300;
+}
+
+@media (max-width: 640px) {
+    .center-image img {
+        width: 260px;
+    }
+    .content h2 {
+        font-size: 2rem;
+    }
 }
