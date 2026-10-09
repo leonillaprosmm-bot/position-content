@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Афиша</title>
+<title>Афиша 3:4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
@@ -12,51 +12,51 @@
 </head>
 <body>
 
-<!-- ЛОГОТИП — двигается, тыком меняет стиль -->
-<img id="draggableLogo"
-     src="https://raw.githubusercontent.com/leonillaprosmm-bot/position-content/main/assets/IMG_1370-removebg-preview.png"
-     alt="Logo"
-     class="draggable-logo"
-     crossorigin="anonymous">
+<!-- Обёртка для центрирования афиши на экране -->
+<div class="stage">
 
-<!-- ШАПКА-АФИША -->
-<header class="poster" id="poster">
+    <!-- ЛОГОТИП — внутри афиши, двигается -->
+    <img id="draggableLogo"
+         src="https://raw.githubusercontent.com/leonillaprosmm-bot/position-content/main/assets/IMG_1370-removebg-preview.png"
+         alt="Logo"
+         class="draggable-logo"
+         crossorigin="anonymous">
 
-    <div class="poster-layer poster-layer--back">
-        <span class="bg-date">25.10</span>
-    </div>
+    <!-- АФИША — ровно 3:4 -->
+    <header class="poster" id="poster">
 
-    <div class="poster-layer poster-layer--mid">
-        <img src="assets/IMG_5436-removebg-preview.png" alt="" class="poster-img" crossorigin="anonymous">
-    </div>
-
-    <div class="poster-layer poster-layer--front">
-        <div class="poster-content">
-            <div class="meta-row">
-                <span class="meta-item">м. Волгоградский проспект</span>
-                <span class="meta-dot"></span>
-                <span class="meta-item">17:00 — 20:00</span>
-            </div>
-            <h1 class="title">25 октября</h1>
-            <div class="subtitle">3 часа + съёмка селектов</div>
-            <div class="tagline">SELECT SHOOTING · VOLGOGRADSKY</div>
+        <div class="poster-layer poster-layer--back">
+            <span class="bg-date">25.10</span>
         </div>
-    </div>
 
-    <!-- Одна кнопка — скачать -->
+        <div class="poster-layer poster-layer--mid">
+            <img src="assets/IMG_5436-removebg-preview.png" alt="" class="poster-img" crossorigin="anonymous">
+        </div>
+
+        <div class="poster-layer poster-layer--front">
+            <div class="poster-content">
+                <div class="meta-row">
+                    <span class="meta-item">м. Волгоградский проспект</span>
+                    <span class="meta-dot"></span>
+                    <span class="meta-item">17:00 — 20:00</span>
+                </div>
+                <h1 class="title">25 октября</h1>
+                <div class="subtitle">3 часа + съёмка селектов</div>
+                <div class="tagline">SELECT SHOOTING · VOLGOGRADSKY</div>
+            </div>
+        </div>
+
+        <div class="scanlines"></div>
+        <div class="glitch-overlay" id="glitchOverlay"></div>
+    </header>
+
+    <!-- Кнопка скачать — вне афиши, в углу экрана -->
     <button class="ctrl-btn" id="downloadBtn" aria-label="Скачать 3:4">
         <span class="ctrl-label">3:4</span>
         <span class="ctrl-num">↓</span>
     </button>
 
-    <div class="scanlines"></div>
-    <div class="glitch-overlay" id="glitchOverlay"></div>
-</header>
-
-<main>
-    <section class="section"><h2>Секция 1</h2></section>
-    <section class="section"><h2>Секция 2</h2></section>
-</main>
+</div>
 
 <script src="script.js"></script>
 </body>
