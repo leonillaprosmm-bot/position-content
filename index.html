@@ -12,17 +12,15 @@
 </head>
 <body>
 
-<!-- Обёртка для центрирования афиши на экране -->
+<!-- ЛОГОТИП — двигается по всему экрану -->
+<img id="draggableLogo"
+     src="https://raw.githubusercontent.com/leonillaprosmm-bot/position-content/main/assets/IMG_1370-removebg-preview.png"
+     alt="Logo"
+     class="draggable-logo"
+     crossorigin="anonymous">
+
 <div class="stage">
 
-    <!-- ЛОГОТИП — внутри афиши, двигается -->
-    <img id="draggableLogo"
-         src="https://raw.githubusercontent.com/leonillaprosmm-bot/position-content/main/assets/IMG_1370-removebg-preview.png"
-         alt="Logo"
-         class="draggable-logo"
-         crossorigin="anonymous">
-
-    <!-- АФИША — ровно 3:4 -->
     <header class="poster" id="poster">
 
         <div class="poster-layer poster-layer--back">
@@ -50,7 +48,6 @@
         <div class="glitch-overlay" id="glitchOverlay"></div>
     </header>
 
-    <!-- Кнопка скачать — вне афиши, в углу экрана -->
     <button class="ctrl-btn" id="downloadBtn" aria-label="Скачать 3:4">
         <span class="ctrl-label">3:4</span>
         <span class="ctrl-num">↓</span>
