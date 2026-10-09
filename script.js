@@ -147,10 +147,6 @@ function changeStyle() {
 
     glitch.classList.add('active');
     setTimeout(() => glitch.classList.remove('active'), 180);
-
-    const title = document.querySelector('.title');
-    title.style.transform = 'translateY(-6px) scale(1.03)';
-    setTimeout(() => { title.style.transform = ''; }, 250);
 }
 
 // ============ Скачивание 3:4 ============
