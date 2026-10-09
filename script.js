@@ -9,13 +9,14 @@ let current = 0;
 
 body.setAttribute('data-style', current);
 
-// ============ ЛОГОТИП: клик = стиль, удержание = перетаскивание ============
+// ============ ЛОГОТИП ============
 let logoX = 0, logoY = 0;
 let logoScale = 1;
 let dragging = false;
 let holding = false;
 let holdTimer = null;
-let startX = 0, startY = 0;
+let startMouseX = 0, startMouseY = 0;  // позиция курсора при старте
+let startLogoX = 0, startLogoY = 0;    // позиция логотипа при старте
 let moved = false;
 
 function applyLogoTransform() {
@@ -39,8 +40,13 @@ function getPoint(e) {
 function startPress(e) {
     if (e.touches && e.touches.length === 2) return;
     const p = getPoint(e);
-    startX = p.clientX - logoX;
-    startY = p.clientY - logoY;
+
+    // Запоминаем позицию курсора и позицию логотипа на момент старта
+    startMouseX = p.clientX;
+    startMouseY = p.clientY;
+    startLogoX = logoX;
+    startLogoY = logoY;
+
     moved = false;
     holding = true;
 
@@ -55,22 +61,33 @@ function startPress(e) {
 
 function movePress(e) {
     const p = getPoint(e);
-    const curX = p.clientX - startX;
-    const curY = p.clientY - startY;
-    if (Math.abs(curX - logoX) > 3 || Math.abs(curY - logoY) > 3) moved = true;
+
+    // Считаем смещение курсора от точки старта
+    const dx = p.clientX - startMouseX;
+    const dy = p.clientY - startMouseY;
+
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
 
     if (dragging) {
         const posterRect = poster.getBoundingClientRect();
-        logoX = curX - posterRect.left;
-        logoY = curY - posterRect.top;
 
-        const maxX = posterRect.width - logo.offsetWidth * logoScale;
-        const maxY = posterRect.height - logo.offsetHeight * logoScale;
-        logoX = Math.max(0, Math.min(logoX, maxX));
-        logoY = Math.max(0, Math.min(logoY, maxY));
+        // Новая позиция = стартовая + смещение
+        let newX = startLogoX + dx;
+        let newY = startLogoY + dy;
 
-        logo.style.left = logoX + 'px';
-        logo.style.top  = logoY + 'px';
+        // Ограничение по краям афиши
+        const logoW = logo.offsetWidth * logoScale;
+        const logoH = logo.offsetHeight * logoScale;
+
+        const maxX = posterRect.width - logoW;
+        const maxY = posterRect.height - logoH;
+
+        newX = Math.max(0, Math.min(newX, maxX));
+        newY = Math.max(0, Math.min(newY, maxY));
+
+        logoX = newX;
+        logoY = newY;
+        applyLogoTransform();
         e.preventDefault();
     }
 }
@@ -144,14 +161,13 @@ function changeStyle() {
     setTimeout(() => { title.style.transform = ''; }, 250);
 }
 
-// ============ Скачивание 3:4 — с гарантированным логотипом ============
+// ============ Скачивание 3:4 ============
 downloadBtn.addEventListener('click', async () => {
     downloadBtn.style.display = 'none';
 
     try {
         await new Promise(r => setTimeout(r, 50));
 
-        // Скриним только .poster
         const canvas = await html2canvas(poster, {
             backgroundColor: null,
             scale: 3,
@@ -160,7 +176,6 @@ downloadBtn.addEventListener('click', async () => {
             logging: false
         });
 
-        // Финальный холст 1080×1440
         const targetW = 1080;
         const targetH = 1440;
         const out = document.createElement('canvas');
@@ -170,36 +185,29 @@ downloadBtn.addEventListener('click', async () => {
 
         ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, targetW, targetH);
 
-        // === РИСУЕМ ЛОГОТИП ВРУЧНУЮ ПОВЕРХ ===
+        // Рисуем логотип вручную поверх
         try {
             const posterRect = poster.getBoundingClientRect();
-
-            // Пересчёт позиции в координаты финального холста
             const scaleFactorX = targetW / posterRect.width;
             const scaleFactorY = targetH / posterRect.height;
 
             const logoRect = logo.getBoundingClientRect();
-
-            // Позиция логотипа относительно афиши
             const relX = logoRect.left - posterRect.left;
             const relY = logoRect.top  - posterRect.top;
             const relW = logoRect.width;
             const relH = logoRect.height;
 
-            // В координатах финального холста
             const drawX = relX * scaleFactorX;
             const drawY = relY * scaleFactorY;
             const drawW = relW * scaleFactorX;
             const drawH = relH * scaleFactorY;
 
-            // Грузим логотип как Image (через blob, чтобы обойти CORS в canvas)
             const logoImg = await loadImageAsBlob(logo.src);
             ctx.drawImage(logoImg, drawX, drawY, drawW, drawH);
         } catch (logoErr) {
             console.warn('Не удалось нарисовать логотип:', logoErr);
         }
 
-        // Скачиваем
         const link = document.createElement('a');
         link.download = 'afisha-3x4.png';
         link.href = out.toDataURL('image/png');
@@ -212,7 +220,6 @@ downloadBtn.addEventListener('click', async () => {
     }
 });
 
-// === Загрузка картинки через blob (обход CORS) ===
 async function loadImageAsBlob(url) {
     const res = await fetch(url, { mode: 'cors' });
     const blob = await res.blob();
