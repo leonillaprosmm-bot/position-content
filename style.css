@@ -1,55 +1,46 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
 
-body {
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     background: #050508;
     color: #fff;
     font-family: 'Space Grotesk', sans-serif;
-    overflow-x: hidden;
 }
 
-/* =========================================
-   ЛОГОТИП — перетаскиваемый + клик = стиль
-   ========================================= */
-.draggable-logo {
+/* Сцена — центрирует афишу на экране */
+.stage {
     position: fixed;
-    top: 100px;
-    left: 100px;
-    width: 130px;
-    height: auto;
-    z-index: 9999;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-drag: none;
-    touch-action: none;
-    filter: drop-shadow(0 0 20px rgba(255, 100, 200, 0.5));
-    transition: filter 0.3s ease, transform 0.2s ease;
-    transform-origin: top left;
-}
-
-.draggable-logo:hover {
-    filter: drop-shadow(0 0 30px rgba(255, 100, 200, 0.9));
-}
-
-.draggable-logo.dragging {
-    cursor: grabbing;
-    filter: drop-shadow(0 0 40px rgba(255, 200, 100, 1));
-}
-
-/* =========================================
-   АФИША
-   ========================================= */
-.poster {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    min-height: 100svh;
-    overflow: hidden;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 16px;
+}
+
+/* =========================================
+   АФИША — строго 3:4
+   ========================================= */
+.poster {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    height: 100%;
+    max-width: 100%;
+    /* Высота = 100%, ширина автоматом по 3:4 */
+    overflow: hidden;
     background: radial-gradient(circle at 50% 50%, #2e0a0a 0%, #050508 75%);
     transition: background 0.8s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* Если ширина ограничивает — уменьшаем по ширине */
+@media (max-aspect-ratio: 3/4) {
+    .poster {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 3 / 4;
+    }
 }
 
 .poster-layer {
@@ -68,7 +59,7 @@ body {
 .bg-date {
     font-family: 'Unbounded', sans-serif;
     font-weight: 800;
-    font-size: clamp(10rem, 40vw, 34rem);
+    font-size: 55cqw; /* относительно ширины афиши */
     line-height: 0.8;
     letter-spacing: -0.06em;
     color: transparent;
@@ -78,22 +69,22 @@ body {
 }
 
 .poster-img {
-    width: clamp(220px, 30vw, 380px);
+    width: 70%;
     height: auto;
-    filter: drop-shadow(0 0 80px rgba(255, 100, 200, 0.55));
+    filter: drop-shadow(0 0 60px rgba(255, 100, 200, 0.55));
     opacity: 0.95;
     animation: floatImg 6s ease-in-out infinite;
 }
 
 @keyframes floatImg {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-12px); }
+    50%      { transform: translateY(-10px); }
 }
 
 .poster-content {
     text-align: center;
-    max-width: 90vw;
-    padding: 0 20px;
+    width: 100%;
+    padding: 0 5%;
     position: relative;
     z-index: 4;
 }
@@ -102,12 +93,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+    gap: 2%;
+    font-size: clamp(0.55rem, 2.4cqw, 0.85rem);
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     opacity: 0.6;
-    margin-bottom: 24px;
+    margin-bottom: 4%;
     font-weight: 300;
     flex-wrap: wrap;
 }
@@ -123,29 +114,30 @@ body {
 .title {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
-    font-size: clamp(2.6rem, 10vw, 7rem);
+    font-size: clamp(1.8rem, 13cqw, 5rem);
     line-height: 0.95;
     letter-spacing: -0.04em;
-    margin-bottom: 16px;
+    margin-bottom: 3%;
     color: #fff;
     text-shadow: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.5);
     animation: pulseBlood 1.5s ease-in-out infinite;
     transition: all 0.6s ease;
+    white-space: nowrap;
 }
 
 .subtitle {
-    font-size: clamp(0.95rem, 2vw, 1.3rem);
+    font-size: clamp(0.75rem, 3.2cqw, 1.2rem);
     font-weight: 300;
     opacity: 0.85;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+    margin-bottom: 3%;
     color: #ff4d6d;
     transition: all 0.6s ease;
 }
 
 .tagline {
-    font-size: clamp(0.65rem, 1.2vw, 0.75rem);
-    letter-spacing: 6px;
+    font-size: clamp(0.5rem, 1.9cqw, 0.75rem);
+    letter-spacing: 5px;
     text-transform: uppercase;
     opacity: 0.4;
     font-weight: 400;
@@ -157,22 +149,50 @@ body {
     50%      { text-shadow: 0 0 40px rgba(255,0,60,1), 0 0 80px rgba(255,0,60,0.7); }
 }
 
-/* Кнопка скачать */
-.ctrl-btn {
+/* =========================================
+   ЛОГОТИП — внутри афиши
+   ========================================= */
+.draggable-logo {
     position: absolute;
-    top: 24px;
-    right: 24px;
-    z-index: 20;
+    top: 10%;
+    left: 8%;
+    width: 20%;
+    height: auto;
+    z-index: 9999;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+    filter: drop-shadow(0 0 20px rgba(255, 100, 200, 0.5));
+    transition: filter 0.3s ease;
+    transform-origin: top left;
+}
+
+.draggable-logo:hover {
+    filter: drop-shadow(0 0 30px rgba(255, 100, 200, 0.9));
+}
+
+.draggable-logo.dragging {
+    cursor: grabbing;
+    filter: drop-shadow(0 0 40px rgba(255, 200, 100, 1));
+}
+
+/* Кнопка скачать — в углу экрана, НЕ в афише */
+.ctrl-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 2px;
-    width: 72px;
-    height: 72px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     color: #fff;
@@ -182,22 +202,21 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 .ctrl-btn:hover {
     transform: scale(1.08);
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .ctrl-btn:active { transform: scale(0.95); }
 
 .ctrl-num {
     font-family: 'Unbounded', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    letter-spacing: 0;
 }
 
 .ctrl-label {
@@ -260,8 +279,6 @@ body[data-style="1"] .title {
     -webkit-text-fill-color: transparent;
     animation: shimmer 3s linear infinite;
     filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.4));
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
     text-shadow: none;
 }
 body[data-style="1"] .subtitle { color: #ffd700; }
@@ -286,8 +303,6 @@ body[data-style="3"] .title {
     color: #fff;
     text-shadow: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.5);
     animation: pulseBlood 1.5s ease-in-out infinite;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
 }
 body[data-style="3"] .subtitle { color: #ff4d6d; }
 body[data-style="3"] .poster { background: radial-gradient(circle at 50% 50%, #2e0a0a 0%, #050508 75%); }
@@ -297,28 +312,14 @@ body[data-style="3"] .poster { background: radial-gradient(circle at 50% 50%, #2
     100% { background-position: 200% center; }
 }
 
-.section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    font-size: 2rem;
-    opacity: 0.3;
-}
-
+/* Мобильная адаптация */
 @media (max-width: 640px) {
-    .poster { min-height: 100svh; }
-    .ctrl-btn { width: 60px; height: 60px; top: 16px; right: 16px; }
-    .ctrl-num { font-size: 16px; }
-    .poster-img { width: 90vw; max-width: 420px; }
-    .draggable-logo { width: 100px; }
-    .meta-row { gap: 8px; letter-spacing: 2px; margin-bottom: 18px; }
-    .bg-date { font-size: 70vw; }
-    .tagline { letter-spacing: 3px; }
+    .stage { padding: 8px; }
+    .ctrl-btn { width: 54px; height: 54px; top: 14px; right: 14px; }
+    .ctrl-num { font-size: 14px; }
 }
 
-@supports (-webkit-touch-callout: none) {
-    .poster { min-height: -webkit-fill-available; }
+/* Поддержка container queries для шрифтов внутри афиши */
+.poster {
+    container-type: inline-size;
 }
