@@ -18,7 +18,9 @@ html, body {
     padding: 16px;
 }
 
-/* АФИША 3:4 */
+/* =========================================
+   АФИША 3:4
+   ========================================= */
 .poster {
     position: relative;
     aspect-ratio: 3 / 4;
@@ -52,7 +54,12 @@ html, body {
 .poster-layer--mid  { z-index: 2; }
 .poster-layer--front{ z-index: 3; }
 
+/* Задняя дата контуром */
 .bg-date {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-family: 'Unbounded', sans-serif;
     font-weight: 800;
     font-size: 55cqw;
@@ -62,14 +69,39 @@ html, body {
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.08);
     user-select: none;
     transition: all 0.8s ease;
+    z-index: 1;
 }
 
+/* Заголовок «25 октября» — в заднем слое */
+.title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 15cqw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.5);
+    animation: pulseBlood 1.5s ease-in-out infinite;
+    transition: all 0.6s ease;
+    white-space: nowrap;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Картинка девушки — в среднем слое, перекрывает заголовок */
 .poster-img {
-    width: 70%;
+    width: 75%;
     height: auto;
     filter: drop-shadow(0 0 60px rgba(255, 100, 200, 0.55));
     opacity: 0.95;
     animation: floatImg 6s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
 }
 
 @keyframes floatImg {
@@ -77,26 +109,37 @@ html, body {
     50%      { transform: translateY(-10px); }
 }
 
+/* Передний слой — текст */
 .poster-content {
     text-align: center;
     width: 100%;
     padding: 0 5%;
     position: relative;
     z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }
 
 .meta-row {
+    position: absolute;
+    top: 32%;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2%;
+    gap: 12px;
     font-size: clamp(0.55rem, 2.4cqw, 0.85rem);
     text-transform: uppercase;
     letter-spacing: 2px;
     opacity: 0.6;
-    margin-bottom: 4%;
     font-weight: 300;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    width: 100%;
 }
 
 .meta-dot {
@@ -105,39 +148,35 @@ html, body {
     border-radius: 50%;
     background: currentColor;
     opacity: 0.6;
-}
-
-.title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.8rem, 13cqw, 5rem);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    margin-bottom: 3%;
-    color: #fff;
-    text-shadow: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.5);
-    animation: pulseBlood 1.5s ease-in-out infinite;
-    transition: all 0.6s ease;
-    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .subtitle {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: clamp(0.75rem, 3.2cqw, 1.2rem);
     font-weight: 300;
     opacity: 0.85;
     letter-spacing: 0.5px;
-    margin-bottom: 3%;
     color: #ff4d6d;
     transition: all 0.6s ease;
+    white-space: nowrap;
 }
 
 .tagline {
+    position: absolute;
+    top: 66%;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: clamp(0.5rem, 1.9cqw, 0.75rem);
     letter-spacing: 5px;
     text-transform: uppercase;
     opacity: 0.4;
     font-weight: 400;
     transition: all 0.6s ease;
+    white-space: nowrap;
 }
 
 @keyframes pulseBlood {
@@ -145,12 +184,14 @@ html, body {
     50%      { text-shadow: 0 0 40px rgba(255,0,60,1), 0 0 80px rgba(255,0,60,0.7); }
 }
 
-/* ЛОГОТИП — фиксирован, двигается по всему экрану */
+/* =========================================
+   ЛОГОТИП — увеличен, по всему экрану
+   ========================================= */
 .draggable-logo {
     position: fixed;
     top: 10%;
     left: 8%;
-    width: 130px;
+    width: 200px;
     height: auto;
     z-index: 9999;
     cursor: pointer;
@@ -248,7 +289,9 @@ html, body {
 }
 .glitch-overlay.active { opacity: 1; }
 
-/* Стили */
+/* =========================================
+   СТИЛИ ТЕКСТА
+   ========================================= */
 body[data-style="0"] .title {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
@@ -258,11 +301,11 @@ body[data-style="0"] .title {
 }
 
 @keyframes glitchTitle {
-    0%, 90%, 100% { transform: translate(0); }
-    92% { transform: translate(-3px, 1px); }
-    94% { transform: translate(3px, -1px); }
-    96% { transform: translate(-2px, -1px); }
-    98% { transform: translate(2px, 1px); }
+    0%, 90%, 100% { transform: translate(-50%, -50%); }
+    92% { transform: translate(calc(-50% - 3px), calc(-50% + 1px)); }
+    94% { transform: translate(calc(-50% + 3px), calc(-50% - 1px)); }
+    96% { transform: translate(calc(-50% - 2px), calc(-50% - 1px)); }
+    98% { transform: translate(calc(-50% + 2px), calc(-50% + 1px)); }
 }
 
 body[data-style="1"] .title {
@@ -297,6 +340,8 @@ body[data-style="3"] .title {
     color: #fff;
     text-shadow: 0 0 20px rgba(255, 0, 60, 0.8), 0 0 40px rgba(255, 0, 60, 0.5);
     animation: pulseBlood 1.5s ease-in-out infinite;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
 }
 body[data-style="3"] .subtitle { color: #ff4d6d; }
 body[data-style="3"] .poster { background: radial-gradient(circle at 50% 50%, #2e0a0a 0%, #050508 75%); }
@@ -306,9 +351,12 @@ body[data-style="3"] .poster { background: radial-gradient(circle at 50% 50%, #2
     100% { background-position: 200% center; }
 }
 
+/* =========================================
+   МОБИЛЬНАЯ АДАПТАЦИЯ
+   ========================================= */
 @media (max-width: 640px) {
     .stage { padding: 8px; }
     .ctrl-btn { width: 54px; height: 54px; top: 14px; right: 14px; }
     .ctrl-num { font-size: 14px; }
-    .draggable-logo { width: 100px; }
+    .draggable-logo { width: 150px; }
 }
