@@ -2,6 +2,7 @@ const body = document.body;
 const glitch = document.getElementById('glitchOverlay');
 const downloadBtn = document.getElementById('downloadBtn');
 const logo = document.getElementById('draggableLogo');
+const poster = document.getElementById('poster');
 
 const TOTAL = 4;
 let current = 0;
@@ -9,7 +10,7 @@ let current = 0;
 body.setAttribute('data-style', current);
 
 // ============ ЛОГОТИП: клик = стиль, удержание = перетаскивание ============
-let logoX = 100, logoY = 100;
+let logoX = 0, logoY = 0;
 let logoScale = 1;
 let dragging = false;
 let holding = false;
@@ -17,10 +18,20 @@ let holdTimer = null;
 let startX = 0, startY = 0;
 let moved = false;
 
-logo.style.left = logoX + 'px';
-logo.style.top  = logoY + 'px';
-logo.style.transform = `scale(${logoScale})`;
-logo.style.transformOrigin = 'top left';
+// Стартовая позиция — 8% слева, 10% сверху
+function applyLogoTransform() {
+    logo.style.left = logoX + 'px';
+    logo.style.top  = logoY + 'px';
+    logo.style.transform = `scale(${logoScale})`;
+}
+
+// Инициализация после загрузки
+window.addEventListener('load', () => {
+    const rect = poster.getBoundingClientRect();
+    logoX = rect.width * 0.08;
+    logoY = rect.height * 0.10;
+    applyLogoTransform();
+});
 
 function getPoint(e) {
     return e.touches ? e.touches[0] : e;
@@ -34,7 +45,6 @@ function startPress(e) {
     moved = false;
     holding = true;
 
-    // Через 250мс удержания — включаем режим перетаскивания
     holdTimer = setTimeout(() => {
         if (holding) {
             dragging = true;
@@ -46,17 +56,19 @@ function startPress(e) {
 
 function movePress(e) {
     const p = getPoint(e);
-    const dx = p.clientX - startX - logoX;
-    const dy = p.clientY - startY - logoY;
 
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+    // Определяем движение
+    const curX = p.clientX - startX;
+    const curY = p.clientY - startY;
+    if (Math.abs(curX - logoX) > 3 || Math.abs(curY - logoY) > 3) moved = true;
 
     if (dragging) {
-        logoX = p.clientX - startX;
-        logoY = p.clientY - startY;
+        const posterRect = poster.getBoundingClientRect();
+        logoX = curX - posterRect.left;
+        logoY = curY - posterRect.top;
 
-        const maxX = window.innerWidth - logo.offsetWidth * logoScale;
-        const maxY = window.innerHeight - logo.offsetHeight * logoScale;
+        const maxX = posterRect.width - logo.offsetWidth * logoScale;
+        const maxY = posterRect.height - logo.offsetHeight * logoScale;
         logoX = Math.max(0, Math.min(logoX, maxX));
         logoY = Math.max(0, Math.min(logoY, maxY));
 
@@ -66,7 +78,7 @@ function movePress(e) {
     }
 }
 
-function endPress(e) {
+function endPress() {
     clearTimeout(holdTimer);
     holding = false;
 
@@ -74,7 +86,6 @@ function endPress(e) {
         dragging = false;
         logo.classList.remove('dragging');
     } else if (!moved) {
-        // Это был клик — меняем стиль
         changeStyle();
     }
 }
@@ -138,59 +149,28 @@ function changeStyle() {
 
 // ============ Скачивание 3:4 ============
 downloadBtn.addEventListener('click', async () => {
-    const poster = document.getElementById('poster');
-
-    // Прячем только кнопку скачивания
     downloadBtn.style.display = 'none';
 
-    // Запоминаем состояние логотипа
-    const logoOriginalPos = logo.style.position;
-
     try {
-        // Даём браузеру отрисовать
         await new Promise(r => setTimeout(r, 50));
 
+        // Скриним ТОЛЬКО .poster — он уже 3:4
         const canvas = await html2canvas(poster, {
-            backgroundColor: '#050508',
-            scale: 2,
+            backgroundColor: null,
+            scale: 3, // высокое разрешение
             useCORS: true,
             allowTaint: true,
-            logging: false,
-            // Включаем и fixed-элементы (логотип)
-            onclone: (clonedDoc) => {
-                const clonedLogo = clonedDoc.getElementById('draggableLogo');
-                if (clonedLogo) {
-                    // Переносим позицию и трансформацию в клон
-                    clonedLogo.style.left = logoX + 'px';
-                    clonedLogo.style.top  = logoY + 'px';
-                    clonedLogo.style.transform = `scale(${logoScale})`;
-                    clonedLogo.style.position = 'absolute';
-                    clonedLogo.style.zIndex = '99999';
-                }
-            }
+            logging: false
         });
 
-        // Обрезаем/масштабируем ровно в 3:4 (1080×1440)
+        // Финальный размер 1080×1440 (3:4)
         const targetW = 1080;
         const targetH = 1440;
         const out = document.createElement('canvas');
         out.width = targetW;
         out.height = targetH;
         const ctx = out.getContext('2d');
-
-        // Вписываем по принципу "cover" (заполняем, обрезая лишнее)
-        const srcAspect = canvas.width / canvas.height;
-        const dstAspect = targetW / targetH;
-        let sx = 0, sy = 0, sw = canvas.width, sh = canvas.height;
-        if (srcAspect > dstAspect) {
-            sw = canvas.height * dstAspect;
-            sx = (canvas.width - sw) / 2;
-        } else {
-            sh = canvas.width / dstAspect;
-            sy = (canvas.height - sh) / 2;
-        }
-
-        ctx.drawImage(canvas, sx, sy, sw, sh, 0, 0, targetW, targetH);
+        ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, targetW, targetH);
 
         const link = document.createElement('a');
         link.download = 'afisha-3x4.png';
