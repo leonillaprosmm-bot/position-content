@@ -93,15 +93,17 @@ html, body {
     pointer-events: none;
 }
 
-/* Картинка девушки — в среднем слое, перекрывает заголовок */
+/* Картинка девушки — УВЕЛИЧЕНА */
 .poster-img {
-    width: 75%;
+    width: 115%;           /* было 75% — теперь больше афиши, обрежется по краям */
+    max-width: none;
     height: auto;
     filter: drop-shadow(0 0 60px rgba(255, 100, 200, 0.55));
     opacity: 0.95;
     animation: floatImg 6s ease-in-out infinite;
     position: relative;
     z-index: 2;
+    object-fit: contain;
 }
 
 @keyframes floatImg {
@@ -185,7 +187,7 @@ html, body {
 }
 
 /* =========================================
-   ЛОГОТИП — увеличен, по всему экрану
+   ЛОГОТИП
    ========================================= */
 .draggable-logo {
     position: fixed;
