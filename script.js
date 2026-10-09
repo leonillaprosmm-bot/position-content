@@ -18,14 +18,13 @@ let holdTimer = null;
 let startX = 0, startY = 0;
 let moved = false;
 
-// Стартовая позиция — 8% слева, 10% сверху
 function applyLogoTransform() {
     logo.style.left = logoX + 'px';
     logo.style.top  = logoY + 'px';
     logo.style.transform = `scale(${logoScale})`;
+    logo.style.transformOrigin = 'top left';
 }
 
-// Инициализация после загрузки
 window.addEventListener('load', () => {
     const rect = poster.getBoundingClientRect();
     logoX = rect.width * 0.08;
@@ -56,8 +55,6 @@ function startPress(e) {
 
 function movePress(e) {
     const p = getPoint(e);
-
-    // Определяем движение
     const curX = p.clientX - startX;
     const curY = p.clientY - startY;
     if (Math.abs(curX - logoX) > 3 || Math.abs(curY - logoY) > 3) moved = true;
@@ -147,31 +144,62 @@ function changeStyle() {
     setTimeout(() => { title.style.transform = ''; }, 250);
 }
 
-// ============ Скачивание 3:4 ============
+// ============ Скачивание 3:4 — с гарантированным логотипом ============
 downloadBtn.addEventListener('click', async () => {
     downloadBtn.style.display = 'none';
 
     try {
         await new Promise(r => setTimeout(r, 50));
 
-        // Скриним ТОЛЬКО .poster — он уже 3:4
+        // Скриним только .poster
         const canvas = await html2canvas(poster, {
             backgroundColor: null,
-            scale: 3, // высокое разрешение
+            scale: 3,
             useCORS: true,
             allowTaint: true,
             logging: false
         });
 
-        // Финальный размер 1080×1440 (3:4)
+        // Финальный холст 1080×1440
         const targetW = 1080;
         const targetH = 1440;
         const out = document.createElement('canvas');
         out.width = targetW;
         out.height = targetH;
         const ctx = out.getContext('2d');
+
         ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, targetW, targetH);
 
+        // === РИСУЕМ ЛОГОТИП ВРУЧНУЮ ПОВЕРХ ===
+        try {
+            const posterRect = poster.getBoundingClientRect();
+
+            // Пересчёт позиции в координаты финального холста
+            const scaleFactorX = targetW / posterRect.width;
+            const scaleFactorY = targetH / posterRect.height;
+
+            const logoRect = logo.getBoundingClientRect();
+
+            // Позиция логотипа относительно афиши
+            const relX = logoRect.left - posterRect.left;
+            const relY = logoRect.top  - posterRect.top;
+            const relW = logoRect.width;
+            const relH = logoRect.height;
+
+            // В координатах финального холста
+            const drawX = relX * scaleFactorX;
+            const drawY = relY * scaleFactorY;
+            const drawW = relW * scaleFactorX;
+            const drawH = relH * scaleFactorY;
+
+            // Грузим логотип как Image (через blob, чтобы обойти CORS в canvas)
+            const logoImg = await loadImageAsBlob(logo.src);
+            ctx.drawImage(logoImg, drawX, drawY, drawW, drawH);
+        } catch (logoErr) {
+            console.warn('Не удалось нарисовать логотип:', logoErr);
+        }
+
+        // Скачиваем
         const link = document.createElement('a');
         link.download = 'afisha-3x4.png';
         link.href = out.toDataURL('image/png');
@@ -183,3 +211,19 @@ downloadBtn.addEventListener('click', async () => {
         downloadBtn.style.display = '';
     }
 });
+
+// === Загрузка картинки через blob (обход CORS) ===
+async function loadImageAsBlob(url) {
+    const res = await fetch(url, { mode: 'cors' });
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            URL.revokeObjectURL(blobUrl);
+            resolve(img);
+        };
+        img.onerror = reject;
+        img.src = blobUrl;
+    });
+}
