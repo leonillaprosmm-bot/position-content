@@ -9,14 +9,14 @@ let current = 0;
 
 body.setAttribute('data-style', current);
 
-// ============ ЛОГОТИП ============
+// ============ ЛОГОТИП — по всему экрану ============
 let logoX = 0, logoY = 0;
 let logoScale = 1;
 let dragging = false;
 let holding = false;
 let holdTimer = null;
-let startMouseX = 0, startMouseY = 0;  // позиция курсора при старте
-let startLogoX = 0, startLogoY = 0;    // позиция логотипа при старте
+let startMouseX = 0, startMouseY = 0;
+let startLogoX = 0, startLogoY = 0;
 let moved = false;
 
 function applyLogoTransform() {
@@ -27,9 +27,8 @@ function applyLogoTransform() {
 }
 
 window.addEventListener('load', () => {
-    const rect = poster.getBoundingClientRect();
-    logoX = rect.width * 0.08;
-    logoY = rect.height * 0.10;
+    logoX = window.innerWidth * 0.08;
+    logoY = window.innerHeight * 0.10;
     applyLogoTransform();
 });
 
@@ -41,7 +40,6 @@ function startPress(e) {
     if (e.touches && e.touches.length === 2) return;
     const p = getPoint(e);
 
-    // Запоминаем позицию курсора и позицию логотипа на момент старта
     startMouseX = p.clientX;
     startMouseY = p.clientY;
     startLogoX = logoX;
@@ -61,26 +59,20 @@ function startPress(e) {
 
 function movePress(e) {
     const p = getPoint(e);
-
-    // Считаем смещение курсора от точки старта
     const dx = p.clientX - startMouseX;
     const dy = p.clientY - startMouseY;
 
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
 
     if (dragging) {
-        const posterRect = poster.getBoundingClientRect();
-
-        // Новая позиция = стартовая + смещение
         let newX = startLogoX + dx;
         let newY = startLogoY + dy;
 
-        // Ограничение по краям афиши
         const logoW = logo.offsetWidth * logoScale;
         const logoH = logo.offsetHeight * logoScale;
 
-        const maxX = posterRect.width - logoW;
-        const maxY = posterRect.height - logoH;
+        const maxX = window.innerWidth - logoW;
+        const maxY = window.innerHeight - logoH;
 
         newX = Math.max(0, Math.min(newX, maxX));
         newY = Math.max(0, Math.min(newY, maxY));
@@ -185,27 +177,25 @@ downloadBtn.addEventListener('click', async () => {
 
         ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, targetW, targetH);
 
-        // Рисуем логотип вручную поверх
+        // Рисуем логотип поверх (если он в пределах афиши)
         try {
             const posterRect = poster.getBoundingClientRect();
-            const scaleFactorX = targetW / posterRect.width;
-            const scaleFactorY = targetH / posterRect.height;
+            const scaleX = targetW / posterRect.width;
+            const scaleY = targetH / posterRect.height;
 
             const logoRect = logo.getBoundingClientRect();
             const relX = logoRect.left - posterRect.left;
             const relY = logoRect.top  - posterRect.top;
-            const relW = logoRect.width;
-            const relH = logoRect.height;
 
-            const drawX = relX * scaleFactorX;
-            const drawY = relY * scaleFactorY;
-            const drawW = relW * scaleFactorX;
-            const drawH = relH * scaleFactorY;
+            const drawX = relX * scaleX;
+            const drawY = relY * scaleY;
+            const drawW = logoRect.width  * scaleX;
+            const drawH = logoRect.height * scaleY;
 
             const logoImg = await loadImageAsBlob(logo.src);
             ctx.drawImage(logoImg, drawX, drawY, drawW, drawH);
         } catch (logoErr) {
-            console.warn('Не удалось нарисовать логотип:', logoErr);
+            console.warn('Логотип не попал:', logoErr);
         }
 
         const link = document.createElement('a');
